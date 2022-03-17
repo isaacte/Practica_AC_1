@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void read_matrix_from_file(char filename[], int rows, int columns, int matrix[rows][columns]) {
+void read_matrix_from_file(char filename[], int rows, int columns, int matrix[rows][columns], FILE *fitxer) {
     int elem;
     int count = 0;
     FILE *file_matrix;
@@ -113,6 +113,7 @@ void print_matrix(int rows, int columns, int matrix[rows][columns], FILE *fitxer
 }
 
 int main(int argc, char *argv[]) {
+    FILE *fitxer = fopen("traça.txt", "w+");
     if (argc == 3) {
         int a_matrix[10][3];
         int b_matrix[3][15];
@@ -121,20 +122,38 @@ int main(int argc, char *argv[]) {
         int ab_matrix[10][15];
         int abt_matrix[15][10];
         int atbt_matrix[15][10];
-        read_matrix_from_file(argv[1], 10, 3, a_matrix);
-        read_matrix_from_file(argv[2], 3, 15, b_matrix);
-        transpose_matrix(10, 3, a_matrix, at_matrix);
-        transpose_matrix(3, 15, b_matrix, bt_matrix);
-        matrix_product(10, 3, 3, 15, a_matrix, b_matrix, ab_matrix);
-        transpose_matrix(10, 15, ab_matrix, abt_matrix);
+        int op_a_matrix[10][3];
+        int op_b_matrix[3][15];
+        int op_a_op_b_matrix[10][15];
+        read_matrix_from_file(argv[1], 10, 3, a_matrix, fitxer);
+        read_matrix_from_file(argv[2], 3, 15, b_matrix, fitxer);
+        transpose_matrix(10, 3, a_matrix, at_matrix, fitxer);
+        transpose_matrix(3, 15, b_matrix, bt_matrix, fitxer);
+        matrix_product(10, 3, 3, 15, a_matrix, b_matrix, ab_matrix, fitxer);
+        transpose_matrix(10, 15, ab_matrix, abt_matrix, fitxer);
+        matrix_product(3, 10, 15, 3, at_matrix, bt_matrix, atbt_matrix, fitxer);    // :)
+        check_equals(15, 10, abt_matrix, atbt_matrix, fitxer); // :)
+        opposite_matrix(10, 3, a_matrix, op_a_matrix, fitxer);  // :)
+        opposite_matrix(3, 15, b_matrix, op_b_matrix, fitxer);  // :)
+        matrix_product(10, 3, 3, 15, op_a_matrix, op_b_matrix, op_a_op_b_matrix, fitxer);    // :)
+
         printf("Matrix A:\n");
-        print_matrix(10, 3, a_matrix);
+        print_matrix(10, 3, a_matrix, fitxer);
         printf("Matrix B:\n");
-        print_matrix(3, 15, b_matrix);
+        print_matrix(3, 15, b_matrix, fitxer);
         printf("Matrix A transposed:\n");
-        print_matrix(3, 10, at_matrix);
+        print_matrix(3, 10, at_matrix, fitxer);
         printf("Matrix B transposed:\n");
-        print_matrix(15, 3, bt_matrix);
+        print_matrix(15, 3, bt_matrix, fitxer);
+        printf("Matrix (A * B) transposed:\n"); // :)
+        print_matrix(15, 10, abt_matrix, fitxer);   // :)
+        printf("Matrix -A:\n"); // :)
+        print_matrix(3, 10, op_a_matrix, fitxer);   // :)
+        printf("Matrix -B:\n"); // :)
+        print_matrix(3, 15, op_b_matrix, fitxer);   // :)
+        printf("Matrix -A * Matrix -B:\n"); // :)
+        print_matrix(10, 15, op_a_op_b_matrix, fitxer);   // :)
+
     } else {
         printf("Incorrect Number of parameters");
     }
