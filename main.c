@@ -79,10 +79,10 @@ void check_equals(int rows, int columns, int A[rows][columns], int B[rows][colum
         fprintf(fitxer,"%d %p\n",2,&i); //:)
         for (int j = 0; j < columns; j++){
             fprintf(fitxer,"%d %p\n",2,&j); //:)
-            if (A[i][j] == B[j][i]){
-                fprintf(fitxer,"%d %p\n",2,&B[j][i]); //:)
-                fprintf(fitxer,"%d %p\n",3,&A[i][j]); //:)
-
+            fprintf(fitxer,"%d %p\n",2,&B[i][j]); //:)
+            fprintf(fitxer,"%d %p\n",3,&A[i][j]); //:)
+            if (A[i][j] != B[i][j]){
+                fprintf(fitxer,"%d %p\n",3,&equal);
                 equal = 0;
                 break;
             }
@@ -91,10 +91,11 @@ void check_equals(int rows, int columns, int A[rows][columns], int B[rows][colum
         fprintf(fitxer,"%d %p\n",3,&i); //:)
 
     }
+    fprintf(fitxer,"%d %p\n",2,&equal);
     if (equal == 0){
-        printf("No són iguals");
+        printf("No són iguals\n");
     } else {
-        printf("Són iguals");
+        printf("Són iguals\n");
     }
 }
 void print_matrix(int rows, int columns, int matrix[rows][columns], FILE *fitxer) {
@@ -121,7 +122,7 @@ int main(int argc, char *argv[]) {
         int bt_matrix[15][3];
         int ab_matrix[10][15];
         int abt_matrix[15][10];
-        int atbt_matrix[15][10];
+        int btat_matrix[15][10];
         int op_a_matrix[10][3];
         int op_b_matrix[3][15];
         int op_a_op_b_matrix[10][15];
@@ -131,8 +132,8 @@ int main(int argc, char *argv[]) {
         transpose_matrix(3, 15, b_matrix, bt_matrix, fitxer);
         matrix_product(10, 3, 3, 15, a_matrix, b_matrix, ab_matrix, fitxer);
         transpose_matrix(10, 15, ab_matrix, abt_matrix, fitxer);
-        matrix_product(3, 10, 15, 3, at_matrix, bt_matrix, atbt_matrix, fitxer);    // :)
-        check_equals(15, 10, abt_matrix, atbt_matrix, fitxer); // :)
+        matrix_product(15, 3, 3, 10, bt_matrix, at_matrix, btat_matrix, fitxer);    // :)
+        check_equals(15, 10, abt_matrix, btat_matrix, fitxer); // :)
         opposite_matrix(10, 3, a_matrix, op_a_matrix, fitxer);  // :)
         opposite_matrix(3, 15, b_matrix, op_b_matrix, fitxer);  // :)
         matrix_product(10, 3, 3, 15, op_a_matrix, op_b_matrix, op_a_op_b_matrix, fitxer);    // :)
